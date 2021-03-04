@@ -3,7 +3,6 @@ package models
 import (
 	"database/sql"
 	"fmt"
-	"reflect"
 	"time"
 
 	"github.com/beego/beego/v2/client/orm"
@@ -29,8 +28,16 @@ type DBInit struct {
 }
 
 type H1 struct {
-	Id    int    `orm:"auto"`
-	Title string `orm:"size(500)"`
+	Id          int       `orm:"auto"`
+	Title       string    `orm:"size(500)"`
+	Href        string    `orm:"size(1000)"`
+	ImgUrl      string    `orm:"szie(1000)"`
+	Description string    `orm:"szie(1000)"`
+	Source      string    `orm:"szie(255)"`
+	Country     string    `orm:"szie(255)"`
+	Src         string    `orm:"size(500)"`
+	Content     string    `orm:"column(content)"`
+	CreateTime  time.Time `orm:"type(datetime)"`
 }
 
 type Infor struct {
@@ -51,35 +58,37 @@ func init() {
 	orm.DefaultTimeLoc = time.UTC
 	// create table
 	orm.RunSyncdb("default", false, true)
-
-	NewsLists = make(map[string]*H1)
-	info := H1{11122233, "astaxie"}
-	NewsLists["user_11111"] = &info
 }
 
-func GetAllNewsEn() map[int]*H1 {
-	var maps []orm.Params
+func GetAllNewsEn() []H1 {
+	var lists []H1
 	o := orm.NewOrm()
 	// var news []*H1
+	mysql := "select * from nytimes ny, nytimes_details nyd where ny.id = nyd.nytimes_id order by ny.create_time desc;"
 
-	num, err := o.Raw("SELECT * FROM nytimes").Values(&maps)
+	num, err := o.Raw(mysql).QueryRows(&lists)
 	// o.QueryTable("nytimes").OrderBy("-Ctime").All(&users)
 	// num, err := o.Raw("SELECT * FROM nytimes").QueryRows(&news)
 	if err != nil {
 		fmt.Println("user nums: ", num, err)
 	}
-	for _, term := range maps {
-		fmt.Println(term["id"], ":", term["title"])
+	Lists := make([]H1, 0)
+	for _, item := range lists {
+		Lists = append(lists, H1{item.Id, item.Title, item.Src, item.Href, item.ImgUrl, item.Description, item.Country, item.Source, item.Content, item.CreateTime})
 	}
 
-	fmt.Print(num, reflect.TypeOf(maps))
+	// for _, term := range maps {
+	// 	fmt.Println(term["id"], ":", term["title"])
+	// }
 
-	list := make(map[int]*H1, num)
-	for k, v := range maps {
-		
-		list[k] = &H1{v["Id"], v["Title"]}
-		fmt.Print(k, v)
-	}
+	// fmt.Print(num, reflect.TypeOf(maps))
 
-	return list
+	// list := make(map[int]*H1, num)
+	// for k, v := range maps {
+
+	// 	list[k] = &H1{v["Id"], v["Title"]}
+	// 	fmt.Print(k, v)
+	// }
+
+	return Lists
 }
