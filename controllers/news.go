@@ -21,7 +21,13 @@ type Res struct {
 // @Success 200 {object} models.User
 // @router / [get]
 func (u *NewsController) GetAll() {
-	info := models.GetAllNewsEn()
+	page, _ := u.GetInt("page")
+
+	if page <= 0 {
+		page = 1
+	}
+
+	info := models.GetAllNewsEn(page)
 	msg := map[string]interface{}{"code": 0, "msg": "success", "data": info}
 	u.Data["json"] = msg
 	u.ServeJSON()

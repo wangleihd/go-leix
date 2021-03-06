@@ -60,11 +60,13 @@ func init() {
 	orm.RunSyncdb("default", false, true)
 }
 
-func GetAllNewsEn() []H1 {
+func GetAllNewsEn(page int) []H1 {
 	var lists []H1
+	size := 20
 	o := orm.NewOrm()
 	// var news []*H1
-	mysql := "select * from nytimes ny, nytimes_details nyd where ny.id = nyd.nytimes_id order by ny.create_time desc;"
+	mysql := fmt.Sprintf("select * from nytimes ny, nytimes_details nyd where ny.id = nyd.nytimes_id order by ny.create_time desc limit %d,20;", (page-1)*size)
+	// mysql := "select * from nytimes by create_time desc limit 20;"
 
 	num, err := o.Raw(mysql).QueryRows(&lists)
 	// o.QueryTable("nytimes").OrderBy("-Ctime").All(&users)

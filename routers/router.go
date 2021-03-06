@@ -25,7 +25,7 @@ func init() {
 				&controllers.UserController{},
 			),
 		),
-		beego.NSNamespace("/news-en",
+		beego.NSNamespace("/newslists",
 			beego.NSInclude(
 				&controllers.NewsController{},
 			),
