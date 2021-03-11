@@ -32,6 +32,7 @@ type H1 struct {
 	Title       string    `orm:"size(500)"`
 	Href        string    `orm:"size(1000)"`
 	ImgUrl      string    `orm:"szie(1000)"`
+	LoadImg     string    `orm:"szie(255)"`
 	Description string    `orm:"szie(1000)"`
 	Source      string    `orm:"szie(255)"`
 	Country     string    `orm:"szie(255)"`
@@ -65,7 +66,7 @@ func GetAllNewsEn(page int) []H1 {
 	size := 20
 	o := orm.NewOrm()
 	// var news []*H1
-	mysql := fmt.Sprintf("select * from nytimes ny, nytimes_details nyd where ny.id = nyd.nytimes_id order by ny.create_time desc limit %d,20;", (page-1)*size)
+	mysql := fmt.Sprintf("select * from nytimes ny, nytimes_details nyd where ny.id = nyd.nytimes_id order by ny.create_time desc limit %d, %d;", (page-1)*size, size)
 	// mysql := "select * from nytimes by create_time desc limit 20;"
 
 	num, err := o.Raw(mysql).QueryRows(&lists)
@@ -76,7 +77,7 @@ func GetAllNewsEn(page int) []H1 {
 	}
 	Lists := make([]H1, 0)
 	for _, item := range lists {
-		Lists = append(lists, H1{item.Id, item.Title, item.Src, item.Href, item.ImgUrl, item.Description, item.Country, item.Source, item.Content, item.CreateTime})
+		Lists = append(lists, H1{item.Id, item.Title, item.LoadImg, item.Src, item.Href, item.ImgUrl, item.Description, item.Country, item.Source, item.Content, item.CreateTime})
 	}
 
 	// for _, term := range maps {
