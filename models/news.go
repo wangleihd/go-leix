@@ -36,6 +36,7 @@ type H1 struct {
 	Description string    `orm:"szie(1000)"`
 	Source      string    `orm:"szie(255)"`
 	Country     string    `orm:"szie(255)"`
+	Menu        string    `orm:"szie(255)"`
 	Src         string    `orm:"size(500)"`
 	Content     string    `orm:"column(content)"`
 	CreateTime  time.Time `orm:"type(datetime)"`
@@ -77,21 +78,7 @@ func GetAllNewsEn(page int) []H1 {
 	}
 	Lists := make([]H1, 0)
 	for _, item := range lists {
-		Lists = append(lists, H1{item.Id, item.Title, item.LoadImg, item.Src, item.Href, item.ImgUrl, item.Description, item.Country, item.Source, item.Content, item.CreateTime})
+		Lists = append(lists, H1{item.Id, item.Title, item.LoadImg, item.Src, item.Href, item.ImgUrl, item.Description, item.Country, item.Source, item.Content, item.Menu, item.CreateTime})
 	}
-
-	// for _, term := range maps {
-	// 	fmt.Println(term["id"], ":", term["title"])
-	// }
-
-	// fmt.Print(num, reflect.TypeOf(maps))
-
-	// list := make(map[int]*H1, num)
-	// for k, v := range maps {
-
-	// 	list[k] = &H1{v["Id"], v["Title"]}
-	// 	fmt.Print(k, v)
-	// }
-
 	return Lists
 }
