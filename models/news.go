@@ -37,6 +37,7 @@ type H1 struct {
 	Source      string    `orm:"szie(255)"`
 	Country     string    `orm:"szie(255)"`
 	Menu        string    `orm:"szie(255)"`
+	LocalSrc    string    `orm:"szie(255)"`
 	Src         string    `orm:"size(500)"`
 	Content     string    `orm:"column(content)"`
 	CreateTime  time.Time `orm:"type(datetime)"`
@@ -78,7 +79,24 @@ func GetAllNewsEn(page int) []H1 {
 	}
 	Lists := make([]H1, 0)
 	for _, item := range lists {
-		Lists = append(lists, H1{item.Id, item.Title, item.LoadImg, item.Src, item.Href, item.ImgUrl, item.Description, item.Country, item.Source, item.Content, item.Menu, item.CreateTime})
+		Lists = append(lists, H1{item.Id, item.Title, item.LoadImg, item.Src, item.Href, item.ImgUrl, item.Description, item.Country, item.Source, item.Content, item.Menu, item.LocalSrc, item.CreateTime})
+	}
+	return Lists
+}
+
+func GetClass(name string, page int) []H1 {
+	var lists []H1
+	size := 20
+
+	o := orm.NewOrm()
+	mysql := fmt.Sprintf("select * from nytimes ny, nytimes_details nyd where ny.id = nyd.nytimes_id and ny.menu = '%s' order by ny.create_time desc limit %d, %d;", name, (page-1)*size, size)
+	num, err := o.Raw(mysql).QueryRows(&lists)
+	if err != nil {
+		fmt.Println("user nums: ", num, err)
+	}
+	Lists := make([]H1, 0)
+	for _, item := range lists {
+		Lists = append(lists, H1{item.Id, item.Title, item.LoadImg, item.Src, item.Href, item.ImgUrl, item.Description, item.Country, item.Source, item.Content, item.Menu, item.LocalSrc, item.CreateTime})
 	}
 	return Lists
 }

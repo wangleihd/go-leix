@@ -30,6 +30,11 @@ func init() {
 				&controllers.NewsController{},
 			),
 		),
+		beego.NSNamespace("/class",
+			beego.NSInclude(
+				&controllers.ClassController{},
+			),
+		),
 	)
 	beego.AddNamespace(ns)
 }

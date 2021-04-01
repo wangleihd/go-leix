@@ -11,6 +11,10 @@ type NewsController struct {
 	beego.Controller
 }
 
+type ClassController struct {
+	beego.Controller
+}
+
 type Res struct {
 	code    int
 	message string
@@ -28,6 +32,22 @@ func (u *NewsController) GetAll() {
 	}
 
 	info := models.GetAllNewsEn(page)
+	msg := map[string]interface{}{"code": 0, "msg": "success", "data": info}
+	u.Data["json"] = msg
+	u.ServeJSON()
+}
+
+func (u *ClassController) GetAll() {
+	name := u.GetString("name")
+	page, _ := u.GetInt("page")
+
+	if name == "" {
+		name = "us"
+	}
+	if page <= 0 {
+		page = 1
+	}
+	info := models.GetClass(name, page)
 	msg := map[string]interface{}{"code": 0, "msg": "success", "data": info}
 	u.Data["json"] = msg
 	u.ServeJSON()
